@@ -1,0 +1,27 @@
+
+
+def init_population():
+    pop = []
+    for i in range(POPULATION_SIZE):
+        pop.append(nn.create_nn())
+
+    return pop
+fitnesses = [0] * POPULATION_SIZE
+
+for (i,p) in enumerate(pop):
+    env.reset_game()
+
+    fitness = 0
+    while not env.game_over():
+        fitness+=1
+        state = env.getGameState()
+        input_values = [state['player_y'], state['player_vel'], state['next_pipe_dist_to_player'], state['next_pipe_top_y']]
+        vals = np.asarray([input_values])
+        pred = p.predict(vals)
+        choice = np.argmax(pred)
+        
+        env.act(choices[choice])
+        time.sleep(1/30)
+    fitnesses[i] = fitness
+
+print(fitnesses)
